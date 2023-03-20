@@ -7,7 +7,7 @@ const MediaTable = () => {
   const getMedia = async () => {
     const response = await fetch('test.json');
     const json = await response.json();
-    //  console.log(json);
+    // console.log(json);
     setMediaArray(json);
   };
 
