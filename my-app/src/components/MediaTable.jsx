@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
-import {baseUrl, mediaUrl} from '../utils/urls';
+import {baseUrl} from '../utils/variables';
 import MediaRow from './MediaRow';
 
 const MediaTable = () => {
