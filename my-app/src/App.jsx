@@ -1,8 +1,21 @@
 import './App.css';
-import MediaTable from './components/MediaTable';
+import Home from '../views/Home';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Layout from '../views/Layout';
+import Single from '../views/Single';
+import Profile from '../views/Profile';
 
 const App = () => {
-  return <MediaTable />;
+  return (
+    <Router>
+      <Routes>
+        <Route element={<Layout />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/single" element={<Single />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;
