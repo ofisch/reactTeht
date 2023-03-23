@@ -7,12 +7,13 @@ import Profile from '../views/Profile';
 
 const App = () => {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <Routes>
-        <Route element={<Layout />}></Route>
-        <Route path="/" element={<Home />} />
-        <Route path="/single" element={<Single />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/single" element={<Single />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Routes>
     </Router>
   );
