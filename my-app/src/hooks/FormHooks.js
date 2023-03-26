@@ -11,11 +11,12 @@ const useForm = (callback, initState) => {
     event.persist();
     setInputs((input) => {
       return {
-      ...inputs,
-      [event.target.name]: event.target.value,
-    };
+        ...inputs,
+        [event.target.name]: event.target.value,
+      };
     });
   };
+
   return {inputs, handleSubmit, handleInputChange};
 };
 

@@ -1,14 +1,25 @@
 //  import PropTypes from 'prop-types';
+import {useNavigate} from 'react-router-dom';
+import {useAuthentication} from '../hooks/ApiHooks';
 import useForm from '../hooks/FormHooks';
 
 const LoginForm = (props) => {
+  const {postLogin} = useAuthentication();
+  const navigate = useNavigate();
+
   const initValues = {
     username: '',
     password: '',
   };
 
-  const doLogin = () => {
-    console.log('login submitted', inputs);
+  const doLogin = async () => {
+    try {
+      const loginResult = await postLogin(inputs);
+      localStorage.setItem('userToken', loginResult.token);
+      navigate('/home');
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(
