@@ -5,7 +5,7 @@ import {MediaContext} from '../src/contexts/MediaContext';
 import {useUser} from '../src/hooks/ApiHooks';
 
 const Layout = () => {
-  const [user, setUser] = useContext(MediaContext);
+  const {user, setUser} = useContext(MediaContext);
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
 
@@ -36,6 +36,12 @@ const Layout = () => {
           </li>
           <li>
             <Link to="/profile">Profile</Link>
+          </li>
+          <li>
+            <Link to="/logout">Logout</Link>
+          </li>
+          <li>
+            <Link to="/">Login</Link>
           </li>
         </ul>
       </nav>
