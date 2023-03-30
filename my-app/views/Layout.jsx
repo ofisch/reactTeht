@@ -1,9 +1,11 @@
-import {useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {Link} from 'react-router-dom';
+import {MediaContext} from '../src/contexts/MediaContext';
 import {useUser} from '../src/hooks/ApiHooks';
 
 const Layout = () => {
+  const [user, setUser] = useContext(MediaContext);
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
 
@@ -13,6 +15,7 @@ const Layout = () => {
       console.log(userToken);
       const user = await getUserByToken(userToken);
       if (user) {
+        setUser(user);
         navigate('/home');
         return;
       }
