@@ -1,19 +1,8 @@
-import {useEffect, useState} from 'react';
-import {useUser} from '../src/hooks/ApiHooks';
+import {useContext} from 'react';
+import {MediaContext} from '../src/contexts/MediaContext';
 
 const Profile = () => {
-  const [user, setUser] = useState({});
-  const {getUserByToken} = useUser();
-
-  const getUserInfo = async () => {
-    const userToken = localStorage.getItem('userToken');
-    const user = await getUserByToken(userToken);
-    setUser(user);
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  const [user] = useContext(MediaContext);
 
   return (
     <>
