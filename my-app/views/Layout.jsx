@@ -1,8 +1,10 @@
+import {createTheme, ThemeProvider} from '@mui/material';
 import {useContext, useEffect} from 'react';
 import {Outlet, useNavigate} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import {MediaContext} from '../src/contexts/MediaContext';
 import {useUser} from '../src/hooks/ApiHooks';
+import {themeOptions} from '../src/theme/themeOptions';
 
 const Layout = () => {
   const {user, setUser} = useContext(MediaContext);
@@ -27,33 +29,37 @@ const Layout = () => {
     getUserInfo();
   }, []);
 
+  const theme = createTheme(themeOptions);
+
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/home">Home</Link>
-          </li>
-          {user ? (
-            <>
-              <li>
-                <Link to="/profile">Profile</Link>
-              </li>
-              <li>
-                <Link to="/logout">Logout</Link>
-              </li>
-            </>
-          ) : (
+    <ThemeProvider theme={theme}>
+      <div>
+        <nav>
+          <ul>
             <li>
-              <Link to="/">Login</Link>
+              <Link to="/home">Home</Link>
             </li>
-          )}
-        </ul>
-      </nav>
-      <main>
-        <Outlet />
-      </main>
-    </div>
+            {user ? (
+              <>
+                <li>
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li>
+                  <Link to="/logout">Logout</Link>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link to="/">Login</Link>
+              </li>
+            )}
+          </ul>
+        </nav>
+        <main>
+          <Outlet />
+        </main>
+      </div>
+    </ThemeProvider>
   );
 };
 

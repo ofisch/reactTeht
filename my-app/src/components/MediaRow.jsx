@@ -11,7 +11,12 @@ const MediaRow = ({file}) => {
         title={file.title}
         subtitle={file.description}
         actionIcon={
-          <Button variant="contained" to="/single" state={{file}}>
+          <Button
+            component={Link}
+            variant="contained"
+            to="/single"
+            state={{file}}
+          >
             View
           </Button>
         }
