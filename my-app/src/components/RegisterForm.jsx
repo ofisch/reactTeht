@@ -1,29 +1,34 @@
-//  import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
+import {Box, Button, Grid, TextField} from '@mui/material';
+import {Container} from '@mui/system';
+import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import {registerForm} from '../utils/errorMessages';
+import {registerValidators} from '../utils/validators';
+import {useEffect} from 'react';
 
-const RegisterForm = (props) => {
+const RegisterForm = ({toggle}) => {
   const {postUser, getCheckUser} = useUser();
 
   const initValues = {
     username: '',
     password: '',
+    confirm: '',
     email: '',
     full_name: '',
   };
 
   const doRegister = async () => {
     try {
-      const userResult = await postUser(inputs);
+      const withoutConfirm = {...inputs};
+      delete withoutConfirm.confirm;
+      const userResult = await postUser(withoutConfirm);
       alert(userResult.message);
+      toggle();
     } catch (error) {
       alert(error.message);
     }
-  };
-
-  const handleUsername = async () => {
-    const {available} = await getCheckUser(inputs.username);
-    available || alert('Username not available');
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(
@@ -31,42 +36,82 @@ const RegisterForm = (props) => {
     initValues
   );
 
+  useEffect(() => {
+    ValidatorForm.addValidationRule(
+      'isPasswordMatch',
+      (value) => value === inputs.password
+    );
+    ValidatorForm.addValidationRule('isUsernameAvailable', async (value) => {
+      return await getCheckUser(inputs.username);
+    });
+  }, [inputs]);
+
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <input
+    <Container maxWidth="xs">
+      <ValidatorForm onSubmit={handleSubmit} noValidate>
+        <TextValidator
+          fullWidth
+          margin="dense"
           name="username"
-          placeholder="käyttäjänimi"
-          onChange={handleInputChange}
+          label="Username"
           value={inputs.username}
-          onBlur={handleUsername}
+          onChange={handleInputChange}
+          validators={registerValidators.username}
+          errorMessages={registerForm.username}
         />
-        <input
+        <TextValidator
+          fullWidth
+          margin="dense"
           name="password"
           type="password"
-          placeholder="salasana"
+          label="Password"
           onChange={handleInputChange}
           value={inputs.password}
+          validators={registerValidators.password}
+          errorMessages={registerForm.password}
         />
-        <input
+        <TextValidator
+          fullWidth
+          margin="dense"
+          name="confirm"
+          type="password"
+          label="Confirm password"
+          onChange={handleInputChange}
+          value={inputs.confirm}
+          validators={registerValidators.confirm}
+          errorMessages={registerForm.confirm}
+        />
+        <TextValidator
+          fullWidth
+          margin="dense"
           name="email"
           type="email"
-          placeholder="sähköposti"
+          label="Email"
           onChange={handleInputChange}
           value={inputs.email}
+          validators={registerValidators.email}
+          errorMessages={registerForm.email}
         />
-        <input
+        <TextValidator
+          fullWidth
+          margin="dense"
           name="full_name"
-          placeholder="koko nimi"
+          label="Full name"
           onChange={handleInputChange}
           value={inputs.full_name}
+          validators={registerValidators.full_name}
+          errorMessages={registerForm.full_name}
         />
-        <button type="submit">Register</button>
-      </form>
-    </>
+        <Button fullWidth sx={{mt: 1}} variant="contained" type="submit">
+          Register
+        </Button>
+      </ValidatorForm>
+    </Container>
   );
 };
 
-RegisterForm.propTypes = {};
+RegisterForm.propTypes = {
+  toggle: PropTypes.func,
+};
 
 export default RegisterForm;
