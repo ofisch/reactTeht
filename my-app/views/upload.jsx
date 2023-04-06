@@ -1,18 +1,75 @@
-import {Box} from '@mui/material';
+import {Box, Button} from '@mui/material';
 import PropTypes from 'prop-types';
+import useForm from '../src/hooks/FormHooks';
+import {useState} from 'react';
+import {useMedia} from '../src/hooks/apiHooks';
+import {useNavigate} from 'react-router-dom';
 
-const upload = (props) => {
+const Upload = (props) => {
+  const [file, setFile] = useState(null);
+  const {postMedia} = useMedia();
+  const navigate = useNavigate();
+
+  const initValues = {
+    title: '',
+    description: '',
+  };
+
+  const doUpload = async () => {
+    try {
+      const data = new FormData();
+      data.append('title', inputs.title);
+      data.append('description', inputs.description);
+      data.append('file', file);
+      const userToken = localStorage.getItem('userToken');
+      const uploadResult = await postMedia(data, userToken);
+      console.log('doUpload', uploadResult);
+      navigate('/home');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    event.persist();
+    setFile(event.target.files[0]);
+  };
+
+  const {inputs, handleSubmit, handleInputChange} = useForm(
+    doUpload,
+    initValues
+  );
+
+  console.log('Upload', inputs, file);
+
   return (
     <Box>
-      <form>
-        <input type="text" name="title" value="title"></input>
-        <textarea name="textarea"></textarea>
-        <input type="file" name="file"></input>
+      <form onSubmit={handleSubmit}>
+        <input
+          onChange={handleInputChange}
+          type="text"
+          name="title"
+          value={inputs.title}
+        ></input>
+        <textarea
+          onChange={handleInputChange}
+          name="description"
+          value={inputs.description}
+        >
+          {inputs.title}
+        </textarea>
+        <input
+          onChange={handleFileChange}
+          type="file"
+          name="file"
+          accept="image/*,video/*,audio/*"
+        ></input>
+        <Button type="submit">Upload</Button>
       </form>
     </Box>
   );
 };
 
-upload.propTypes = {};
+Upload.propTypes = {};
 
-export default upload;
+export default Upload;
