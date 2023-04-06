@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {baseUrl} from '../utils/variables';
+import {appId, baseUrl} from '../utils/variables';
 
 const doFetch = async (url, options) => {
   const response = await fetch(url, options);
@@ -17,7 +17,7 @@ const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
   const getMedia = async () => {
     try {
-      const files = await doFetch(baseUrl + 'media');
+      const files = await useTag().getTag(appId);
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
           return await doFetch(baseUrl + 'media/' + file.file_id);
@@ -74,7 +74,7 @@ const useUser = () => {
   };
 
   const getCheckUser = async (username) => {
-    const {available} = await doFetch(baseUrl + 'users/username' + username);
+    const {available} = await doFetch(baseUrl + 'users/username/' + username);
     return available;
   };
 
@@ -95,4 +95,29 @@ const useAuthentication = () => {
   return {postLogin};
 };
 
-export {useMedia, useUser, useAuthentication};
+const useTag = () => {
+  const getTag = async (tag) => {
+    const tagResult = await doFetch(baseUrl + 'tags/' + tag);
+    if (tagResult.length > 0) {
+      return tagResult;
+    } else {
+      throw new Error('Tag not found');
+    }
+  };
+
+  const postTag = async (data, token) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'tags', fetchOptions);
+  };
+
+  return {getTag, postTag};
+};
+
+export {useMedia, useUser, useAuthentication, useTag};
