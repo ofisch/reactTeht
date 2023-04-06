@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/~onnif/mpjkk/validation/",
+    "build": "vite build --base=/~onnif/mpjkk/upload/",
     "preview": "vite preview"
   },
   "dependencies": {
